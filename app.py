@@ -12,6 +12,11 @@ def create_app():
     # mount tools
     app.register_blueprint(password_bp, url_prefix="/password")
 
+    # healtz ping page
+    @app.get("/healthz")
+    def healthz():
+        return "OK", 200
+
     return app
 
 app = create_app()
