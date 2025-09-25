@@ -17,6 +17,7 @@ def create_app():
     def healthz():
         return "OK", 200
 
+    print(app.url_map)
     return app
 
 app = create_app()

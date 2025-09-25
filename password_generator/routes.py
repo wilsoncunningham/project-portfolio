@@ -1,23 +1,25 @@
-from flask import render_template, request, jsonify
-from .decode import decode, decode_url
-from . import bp
+from flask import Blueprint, render_template, request
+from .decode import decode
 
-@bp.route("/", methods=["GET", "POST"])
-def page():
-    # server-rendered flow (no JS):
-    result = error = None
-    if request.method == "POST":
-        input_type = request.form.get("input_type", "text")
-        body = (request.form.get("input_body") or "").strip()
-        try:
-            complexity = max(2, min(6, int(request.form.get("complexity", 4))))
-        except ValueError:
-            error = "Invalid complexity"
-        if not body:
-            error = "Input is required"
-        else:
-            try:
-                result = decode(body, complexity) if input_type == "text" else decode_url(body, complexity)
-            except Exception as e:
-                error = str(e)
-    return render_template("password.html", result=result, error=error)
+bp = Blueprint(
+    "password",
+    __name__,
+    template_folder="templates",   # looks inside password_generator/templates
+)
+
+@bp.get("/")
+def form():
+    # renders the form
+    return render_template("password.html")  # this file is in password_generator/templates
+
+@bp.post("/generate")
+def generate():
+    input_body = request.form.get("input_body", "")
+    try:
+        complexity = int(request.form.get("complexity", 3))
+    except ValueError:
+        complexity = 3
+
+    result = decode(input_body, complexity)
+    # render the same page with the result block visible
+    return render_template("password.html", result=result)

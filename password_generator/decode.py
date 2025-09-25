@@ -58,8 +58,8 @@ def ddays_modded_joined(ddays_list: list[int]) -> str:
 def number_str_to_ascii(number_string: str) -> list[int]:
     doubles = [int(number_string[i:i+2]) for i in range(0, len(number_string), 2)
                if len(number_string[i:i+2]) == 2]
-    doubles = [n for n in doubles if n <= 93]           # filter, don’t mutate-while-iterating
-    return [n + 33 for n in doubles]                    # map to printable ASCII (33..126)
+    doubles = [n for n in doubles if n <= 93]
+    return [n + 33 for n in doubles] 
 
 def ascii_codes_to_password(ascii_codes: list[int]) -> str:
     return "".join(chr(code) for code in ascii_codes)
