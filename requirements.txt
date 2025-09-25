@@ -1,0 +1,6 @@
+flask==3.0.3
+gunicorn==22.0.0
+requests==2.32.3
+beautifulsoup4==4.12.3
+lxml==5.3.0           # optional but fast HTML parser
+pillow==10.4.0        # needed by password tool’s decode.py if using images

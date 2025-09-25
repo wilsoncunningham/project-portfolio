@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Tools{% endblock %}
+{% block content %}
+  <h1 class="mb-4">Projects & Tools</h1>
+
+  <div>
+    <p>
+      While I built my main website (wilsoncunningham.com) with Rails, I built this site (projects.wilsoncunningham.com) 
+      with Python and Flask. I made this change because I wanted to be able 
+      to integrate various projects and tools into the site using
+      the more practical language: Python. For full-stack development, 
+      I indeed know more about and prefer Rails, but for creating a password generator, 
+      web scrapers, ML algos, and so on, Python is the clear choice.
+    </p>
+  </div>
+
+  <div class="list-group">
+    <a class="list-group-item list-group-item-action" href="/password">
+      Password Generator
+    </a>
+    <a class="list-group-item list-group-item-action" href="/scraper">
+      Simple Scraper
+    </a>
+    <!-- add more tools here -->
+  </div>
+{% endblock %}
