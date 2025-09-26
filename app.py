@@ -8,6 +8,10 @@ def create_app():
     @app.get("/")
     def index():
         return render_template("index.html")
+    
+    @app.get("/bible")
+    def bible():
+        return render_template("bible.html")
 
     # mount tools
     app.register_blueprint(password_bp, url_prefix="/password")
