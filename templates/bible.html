@@ -3,4 +3,52 @@
 
   <h1 class="mb-3">Bible Cover2Cover</h1>
 
+  <p class="lead mb-4">
+    This was my final project for the Application Development course at the University of Chicago.
+    The application, called Bible Cover2Cover, is a full-stack Ruby on Rails web app that allows users
+    to read the entire Bible, track their progress, and follow reading plans.
+  </p>
+
+  <p class="mb-4">
+    Below is a short video walkthrough where I demonstrate how the app works and explain its key features.
+  </p>
+
+  <div class="ratio ratio-16x9 mb-5">
+    <iframe 
+      src="https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE" 
+      title="Bible Cover2Cover - Application Development Final Project" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <hr class="my-5">
+
+  <h3>About the Project</h3>
+
+  <p>
+    The app fetches Bible text dynamically through an external API, allowing users to navigate
+    by book and chapter using clean, semantic URLs such as <code>/books/matthew/1</code>.
+    All passage data and user interactions are stored in a PostgreSQL database.
+  </p>
+
+  <p>
+    Users can create an account and log in with Devise authentication. Once logged in, they can
+    track their reading progress, which chapters they have completed, and where they left off.
+    They can also subscribe or unsubscribe from preset reading plans that schedule daily readings
+    and update automatically as chapters are completed.
+  </p>
+
+  <p>
+    The focus of the project was on functionality and backend integration rather than styling.
+    It demonstrates a complete full-stack workflow that includes fetching and parsing JSON data
+    from an API, persisting user data, managing sessions and routes, and building a responsive
+    and data-driven web application in Rails.
+  </p>
+
+  <p>
+    This project reflects the goals of the course: connecting front-end structure with backend logic,
+    using databases effectively, and integrating third-party APIs into a real web application.
+  </p>
+
 {% endblock %}
