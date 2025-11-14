@@ -46,16 +46,48 @@ pre {
 
 .latex-block {
   font-family: "Computer Modern Serif", serif;
-  line-height: 1.7;
+  font-size: 1.08rem;
+  line-height: 1.55; 
   max-width: 80ch;
   width: 80%;
-  margin: 2em auto;
+  margin: 2.5em auto;
+  color: #111;
+  letter-spacing: -0.01em;
+  margin-top: 0.8em;
 }
 
 .latex-block :is(h1, h2, h3, h4, h5, h6) {
   font-family: inherit;
+  font-weight: normal;
+  margin-top: 1.5em;
+  margin-bottom: 0.8em;
 }
+
+.latex-block h2 { font-size: 1.10rem; }
+.latex-block h3 { font-size: 1.06rem; }
+.latex-block h4 { font-size: 1.03rem; }
 
 .latex-inline {
   font-family: "Computer Modern Serif", serif;
+}
+
+
+.latex-section {
+  font-family: "CMU Serif", "Computer Modern Roman", serif;
+  text-align: center;
+  font-size: 1.3rem; 
+  font-variant: small-caps;
+  letter-spacing: -0.02em;
+  margin-top: 2.5em;
+  margin-bottom: 1.2em;
+}
+.latex-section .section-number {
+  margin-right: 0.35em;
+}
+.latex-section .section-title {
+  text-transform: uppercase;
+  display: inline-block;
+}
+.latex-section .section-title::first-letter {
+  font-size: 1.25em;
 }

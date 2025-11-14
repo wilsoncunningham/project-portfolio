@@ -145,76 +145,99 @@ $$
   e^{i\pi} + 1 = 0 \implies e^{i\pi} = -1
   $$
 
-  <h2 id="custom-styling">Custom Styling</h2>
-  <p>
-    For the bulk of the styling of this site, I am using Bootstrap CSS. However, 
-    I have added some custom CSS classes specifically for LaTeX content to improve readability
-    and presentation. I created two custom classes to replicate the feel of a 
-    native LaTeX file: <code>latex-inline</code> and <code>latex-block</code>.
-    With these classes, I can apply specific styles to inline and block LaTeX content,
-    respectively. These classes apply LaTeX styling to the font, size, color, and spacing 
-    of text, not just the math content. The classes are as follows:
-  </p>
-  <pre><code>.latex-block {
+<h2 id="custom-styling">Custom Styling</h2>
+<p>
+  Most of the site uses Bootstrap, but for math notes I layer on a small LaTeX-inspired
+  stylesheet. I use three classes:
+  <code>latex-inline</code> for short phrases, <code>latex-block</code> for full
+  note-style sections, and <code>latex-section</code> for LaTeX-style section headers.
+  Together they switch the typography to Computer Modern, tighten the spacing, and
+  narrow the text width so it feels closer to a real LaTeX document.
+</p>
+
+<pre><code>.latex-block {
   font-family: "Computer Modern Serif", serif;
-  line-height: 1.7;
+  font-size: 1.08rem;
+  line-height: 1.55;
   max-width: 80ch;
   width: 80%;
-  margin: 2em auto;
+  margin: 2.5em auto 0.8em;
+  color: #111;
+  letter-spacing: -0.01em;
+}
+
+/* Headings inside a LaTeX block */
+.latex-block :is(h1, h2, h3, h4, h5, h6) {
+  font-family: inherit;
+  font-weight: normal;
+  margin-top: 1.5em;
+  margin-bottom: 0.8em;
 }
 
 .latex-inline {
   font-family: "Computer Modern Serif", serif;
-}</code></pre>
+}
 
-  <h4 id="latex-inline-class">LaTeX Inline Class</h4>
-  <p>
-    The <code>latex-inline</code> class is designed for inline LaTeX content within paragraphs. 
-    It can be applied through a <code>&lt;span&gt;</code> tag to give a LaTeX look to an entire phrase or sentence.
-  </p>
-  <p>
-    <strong>Example:</strong>
-    <span class="latex-inline">
-      The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$. 
-      And we can show a simple integral: $\int x^n \, dx = \frac{x^{n+1}}{n+1}$.
-    </span> And we return to normal text here.
-  </p>
+/* Centered, small-caps LaTeX-style section */
+.latex-section {
+  text-align: center;
+  font-variant: small-caps;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  margin-top: 2.5em;
+  margin-bottom: 1.2em;
+}
+</code></pre>
 
-  <h4 id="latex-block-class">LaTeX Block Class</h4>
+<h4 id="latex-inline-class">LaTeX Inline Class</h4>
+<p>
+  <code>latex-inline</code> is for short stretches of text inside a paragraph.
+  Wrap a phrase in a <code>&lt;span&gt;</code> and it will use the Computer Modern
+  font so the surrounding prose matches the equations.
+</p>
+<p>
+  <strong>Example:</strong>
+  <span class="latex-inline">
+    The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$, and a basic
+    power rule is $\int x^n \, dx = \frac{x^{n+1}}{n+1}$.
+  </span>
+  Then we return to the normal site font here.
+</p>
+
+<h4 id="latex-block-class">LaTeX Block Class</h4>
+<p>
+  <code>latex-block</code> is for full note-style sections. Applied to a
+  <code>&lt;div&gt;</code>, it narrows the measure, adjusts line height and
+  letter-spacing, and restyles headings so the whole block reads like a page
+  from a LaTeX article.
+</p>
+<p><strong>Example:</strong></p>
+<div class="latex-block">
+  <h2 class="latex-section">
+    <span class="section-number">1.</span>
+    <span class="section-title">Exponential Function and Its Derivative</span>
+  </h2>
   <p>
-    The <code>latex-block</code> class is designed for larger blocks of LaTeX content. 
-    It is typically applied through a <code>&lt;div&gt;</code> tag. 
-    This class not only applies the LaTeX-style typography but also adjusts the font size,
-    line height, margins, and maximum characters per line to create a distinct section that stands out from
-    the rest of the content. The <code>latex-block</code> class is ideal for sections 
-    that read like excerpts from a mathematics textbook or academic note. 
-    It allows you to mix longer explanations with both inline and display-style 
-    equations while keeping the layout clean and readable.
-  </p>
-  <p><strong>Example:</strong></p>
-  <div class="latex-block">
     Consider the exponential function $f(x) = e^{ax}$, where $a$ is a real constant. 
     One of its most important properties is that its derivative is proportional to the 
     function itself. To see this, we compute
     $$
-      \frac{d}{dx} e^{ax} = ae^{ax}.
+      \frac{d}{dx} e^{ax} = a e^{ax}.
     $$
     This differential equation,
     $$
       f'(x) = a f(x),
     $$
-    uniquely characterizes exponential growth (or decay) and appears throughout probability, 
-    finance, and differential equations. Its solution illustrates why the exponential 
-    function plays such a central role in continuous-time models.
-  </div>
+    characterizes exponential growth (or decay) and appears throughout probability, 
+    finance, and differential equations.
+  </p>
+</div>
 
   <h2 id="latex-in-flask">Using LaTeX in Flask Variables</h2>
   <p>
     When inserting LaTeX into Python strings, backslashes must be escaped:
   </p>
-  <pre>
-    <code>eq = r"$$ \\frac{a}{b} $$"</code>
-  </pre>
+  <pre><code>eq = r"$$ \\frac{a}{b} $$"</code></pre>
   <p>
     And rendered with <code>{% raw %}{{ eq|safe }}{% endraw %}</code>.
   </p>
