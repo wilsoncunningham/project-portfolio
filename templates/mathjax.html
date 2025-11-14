@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="docs">
+  <h1>MathJax LaTeX Guide</h1>
+
+  <h2 id="contents">Contents</h2>
+  <ul>
+    <li><a href="#what-is-mathjax">What is MathJax?</a></li>
+    <li><a href="#why-mathjax">Why I’m using MathJax here</a></li>
+    <li><a href="#how-implemented">How I implemented MathJax</a></li>
+    <li><a href="#delimiters">Delimiters</a>
+      <ul>
+        <li><a href="#inline-math">Inline Math</a></li>
+        <li><a href="#display-math">Display Math</a></li>
+      </ul>
+    </li>
+    <li><a href="#custom-styling">Custom Styling</a>
+      <ul>
+        <li><a href="#latex-inline-class">LaTeX Inline Class</a></li>
+        <li><a href="#latex-block-class">LaTeX Block Class</a></li>
+      </ul>
+    </li>
+    <li><a href="#latex-in-flask">Using LaTeX in Flask Variables</a></li>
+    <li><a href="#what-mathjax-not-do">What MathJax Does NOT Do</a></li>
+    <li><a href="#playground">Playground</a></li>
+  </ul>
+
+  <h2 id="what-is-mathjax">What is MathJax?</h2>
+  <p>
+    MathJax is a JavaScript library that renders LaTeX-style mathematics directly in the browser.
+    Instead of embedding images of equations or relying on a full LaTeX compiler, we can write
+    math inline in our HTML using familiar LaTeX syntax, and MathJax will typeset it on the client side.
+  </p>
+
+  <h2 id="why-mathjax">Why I’m using MathJax here</h2>
+  <p>
+    This projects site may include formulas, derivations, and notes from math and finance.
+    Rather than inventing a custom notation or relying on plain text, MathJax lets me:
+  </p>
+  <ul>
+    <li>Write math using standard LaTeX commands I already know.</li>
+    <li>Keep the source readable in templates and markdown-style content.</li>
+    <li>Render equations cleanly across devices without images or PDFs.</li>
+    <li>And simply, let me easily implement the math style I so love!</li>
+  </ul>
+
+  <h2 id="how-implemented">How I implemented MathJax</h2>
+  <p>
+    I configured MathJax once in the global <code>&lt;head&gt;</code> section (in <code>base.html</code>).
+    I load it from a CDN and tell it which delimiters to treat as math. The setup looks roughly like this:
+  </p>
+  <pre>
+    <code>
+    &lt;script&gt;
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        svg: { fontCache: 'global' }
+      };
+    &lt;/script&gt;
+
+    &lt;script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
+    &lt;/script&gt;
+    </code>
+  </pre>
+  <p>
+    With this configuration in place, any template on the site can use the delimiters below and MathJax
+    will automatically find and render the math when the page loads.
+  </p>
+
+  <h2 id="delimiters">Delimiters</h2>
+  <p>
+    There are four main delimiters for LaTeX support on MathJax:
+  </p>
+  <ul>
+    <li>Inline math using dollar signs: <code>$ ... $</code></li>
+    <li>Display math using double dollar signs: <code>$$ ... $$</code></li>
+    <li>Inline math using parentheses: <code>\( ... \)</code></li>
+    <li>Display math using brackets: <code>\[ ... \]</code></li>
+  </ul>
+
+  <h4 id="inline-math">Inline Math</h4>
+  <p>
+    For inline math, we typically use the dollar sign delimiters: <code>$ ... $</code>. 
+    The parentheses delimiter, <code>\( ... \)</code>, 
+    is also supported for inline math, but it's less common. 
+    If we are using financial notation that includes dollar signs,
+    we may prefer to use the parentheses delimiters to avoid confusion. 
+    Functionally, the two are identical.
+  </p>
+  <p>
+    <strong>Example:</strong>
+    The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$. 
+    And we can show a simple integral: $\int x^n \, dx = \frac{x^{n+1}}{n+1}$.
+  </p>
+
+  <h4 id="display-math">Display Math</h4>
+  <p>
+    For display math, we typically use the double dollar sign delimiters: <code>$$ ... $$</code>. 
+    The brackets delimiter, <code>\[ ... \]</code>, is cleaner and more formal as 
+    it will not collide with JavaScript templates or Markdown renderers. 
+    Again, if there is a conflict with dollar signs in financial notation, 
+    we may prefer to use the brackets delimiters. Functionally, the two are identical.
+  </p>
+  <p><strong>Example:</strong></p>
+  $$
+  \int_0^1 x^n \, dx = \frac{1}{n+1}
+  $$
+  <p><strong>Another example:</strong></p>
+  $$
+  e^{i\pi} + 1 = 0 \implies e^{i\pi} = -1
+  $$
+
+  <h2 id="custom-styling">Custom Styling</h2>
+  <p>
+    For the bulk of the styling of this site, I am using Bootstrap CSS. However, 
+    I have added some custom CSS classes specifically for LaTeX content to improve readability
+    and presentation. I created two custom classes to replicate the feel of a 
+    native LaTeX file: <code>latex-inline</code> and <code>latex-block</code>.
+    With these classes, I can apply specific styles to inline and block LaTeX content,
+    respectively. These classes apply LaTeX styling to the font, size, color, and spacing 
+    of text, not just the math content. The classes are as follows:
+  </p>
+  <pre><code>.latex-block {
+  font-family: "Computer Modern Serif", serif;
+  line-height: 1.7;
+  max-width: 80ch;
+  width: 80%;
+  margin: 2em auto;
+}
+
+.latex-block h1,
+.latex-block h2,
+.latex-block h3,
+.latex-block h4,
+.latex-block h5,
+.latex-block h6 {
+  font-family: inherit;
+}
+
+.latex-inline {
+  font-family: "Computer Modern Serif", serif;
+}
+  </code></pre>
+
+  <h4 id="latex-inline-class">LaTeX Inline Class</h4>
+  <p>
+    The <code>latex-inline</code> class is designed for inline LaTeX content within paragraphs. 
+    It can be applied through a <code>&lt;span&gt;</code> tag to give a LaTeX look to an entire phrase or sentence.
+  </p>
+  <p>
+    <strong>Example:</strong>
+    <span class="latex-inline">
+      The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$. 
+      And we can show a simple integral: $\int x^n \, dx = \frac{x^{n+1}}{n+1}$.
+    </span> And we return to normal text here.
+  </p>
+
+  <h4 id="latex-block-class">LaTeX Block Class</h4>
+  <p>
+    The <code>latex-block</code> class is designed for larger blocks of LaTeX content. 
+    It is typically applied through a <code>&lt;div&gt;</code> tag. 
+    This class not only applies the LaTeX-style typography but also adjusts the font size,
+    line height, margins, and maximum characters per line to create a distinct section that stands out from
+    the rest of the content. The <code>latex-block</code> class is ideal for sections 
+    that read like excerpts from a mathematics textbook or academic note. 
+    It allows you to mix longer explanations with both inline and display-style 
+    equations while keeping the layout clean and readable.
+  </p>
+  <p><strong>Example:</strong></p>
+  <div class="latex-block">
+    Consider the exponential function $f(x) = e^{ax}$, where $a$ is a real constant. 
+    One of its most important properties is that its derivative is proportional to the 
+    function itself. To see this, we compute
+    $$
+      \frac{d}{dx} e^{ax} = ae^{ax}.
+    $$
+    This differential equation,
+    $$
+      f'(x) = a f(x),
+    $$
+    uniquely characterizes exponential growth (or decay) and appears throughout probability, 
+    finance, and differential equations. Its solution illustrates why the exponential 
+    function plays such a central role in continuous-time models.
+  </div>
+
+  <h2 id="latex-in-flask">Using LaTeX in Flask Variables</h2>
+  <p>
+    When inserting LaTeX into Python strings, backslashes must be escaped:
+  </p>
+  <pre>
+    <code>eq = r"$$ \\frac{a}{b} $$"</code>
+  </pre>
+  <p>
+    And rendered with <code>{% raw %}{{ eq|safe }}{% endraw %}</code>.
+  </p>
+
+  <h2 id="what-mathjax-not-do">What MathJax Does NOT Do</h2>
+  <p>
+    MathJax supports LaTeX-style math, but not the full LaTeX document language.
+    Commands like <code>\section</code>, <code>\begin{itemize}</code>, 
+    <code>\maketitle</code>, <code>\newcommand</code>, etc., are not supported.
+    Only math-mode commands are rendered.
+  </p>
+
+  <h2 id="playground">Playground</h2>
+  <p>Feel free to write test equations here:</p>
+
+  <div class="latex-block">
+    $$\sum_{i=1}^{10} i = 55$$
+    $$\mathbb{E}[X] = \int_{-\infty}^{\infty} x f(x)\,dx$$
+  </div>
+</div>
+
+{% endblock %}

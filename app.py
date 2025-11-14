@@ -13,6 +13,10 @@ def create_app():
     @app.get("/bible")
     def bible():
         return render_template("bible.html")
+    
+    @app.get("/mathjax")
+    def mathjax():
+        return render_template("mathjax.html")
 
     # mount tools
     app.register_blueprint(password_bp, url_prefix="/password")
