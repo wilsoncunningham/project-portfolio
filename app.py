@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from password_generator import bp as password_bp
-from stock_scraper import bp as scraper_bp   # ← import the new blueprint
+from stock_scraper import bp as scraper_bp
+from markov_switching import bp as markov_switching_bp
 
 
 def create_app():
@@ -21,6 +22,7 @@ def create_app():
     # mount tools
     app.register_blueprint(password_bp, url_prefix="/password")
     app.register_blueprint(scraper_bp, url_prefix="/stock_scraper")
+    app.register_blueprint(markov_switching_bp, url_prefix="/markov_switching")
 
     @app.get("/healthz")
     def healthz():
