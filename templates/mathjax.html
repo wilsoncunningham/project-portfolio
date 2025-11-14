@@ -6,6 +6,7 @@
 
   <h2 id="contents">Contents</h2>
   <ul>
+    <li><a href="#playground">Playground</a></li>
     <li><a href="#what-is-mathjax">What is MathJax?</a></li>
     <li><a href="#why-mathjax">Why I’m using MathJax here</a></li>
     <li><a href="#how-implemented">How I implemented MathJax</a></li>
@@ -23,8 +24,41 @@
     </li>
     <li><a href="#latex-in-flask">Using LaTeX in Flask Variables</a></li>
     <li><a href="#what-mathjax-not-do">What MathJax Does NOT Do</a></li>
-    <li><a href="#playground">Playground</a></li>
   </ul>
+
+  <h2 id="playground">Playground</h2>
+  <p>Type LaTeX (and HTML) below and see it rendered live with MathJax.</p>
+
+  <div class="row g-3">
+    <!-- Left: input -->
+    <div class="col-md-6">
+      <label for="mathjax-input" class="form-label">LaTeX Input</label>
+      <textarea id="mathjax-input"
+                class="form-control font-monospace"
+                rows="10">
+This is inline: $e^{i\pi} + 1 = 0$.
+
+<br><br>
+
+This is display:
+
+$$
+\int_0^\infty e^{-x^2} \, dx = \frac{\sqrt{\pi}}{2}
+$$
+      </textarea>
+      <div class="form-text">
+        Use <code>$...$</code> for inline, <code>$$...$$</code> for display.
+      </div>
+    </div>
+
+    <!-- Right: preview -->
+    <div class="col-md-6">
+      <label class="form-label">Rendered Preview</label>
+      <div id="mathjax-preview" class="latex-block border rounded p-3 bg-body-tertiary">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
 
   <h2 id="what-is-mathjax">What is MathJax?</h2>
   <p>
@@ -50,23 +84,19 @@
     I configured MathJax once in the global <code>&lt;head&gt;</code> section (in <code>base.html</code>).
     I load it from a CDN and tell it which delimiters to treat as math. The setup looks roughly like this:
   </p>
-  <pre>
-    <code>
-    &lt;script&gt;
-      window.MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']],
-          displayMath: [['$$', '$$'], ['\\[', '\\]']]
-        },
-        svg: { fontCache: 'global' }
-      };
-    &lt;/script&gt;
+  <pre><code>&lt;script&gt;
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+&lt;/script&gt;
 
-    &lt;script id="MathJax-script" async
-            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
-    &lt;/script&gt;
-    </code>
-  </pre>
+&lt;script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
+&lt;/script&gt;</code></pre>
   <p>
     With this configuration in place, any template on the site can use the delimiters below and MathJax
     will automatically find and render the math when the page loads.
@@ -133,19 +163,9 @@
   margin: 2em auto;
 }
 
-.latex-block h1,
-.latex-block h2,
-.latex-block h3,
-.latex-block h4,
-.latex-block h5,
-.latex-block h6 {
-  font-family: inherit;
-}
-
 .latex-inline {
   font-family: "Computer Modern Serif", serif;
-}
-  </code></pre>
+}</code></pre>
 
   <h4 id="latex-inline-class">LaTeX Inline Class</h4>
   <p>
@@ -206,14 +226,34 @@
     <code>\maketitle</code>, <code>\newcommand</code>, etc., are not supported.
     Only math-mode commands are rendered.
   </p>
-
-  <h2 id="playground">Playground</h2>
-  <p>Feel free to write test equations here:</p>
-
-  <div class="latex-block">
-    $$\sum_{i=1}^{10} i = 55$$
-    $$\mathbb{E}[X] = \int_{-\infty}^{\infty} x f(x)\,dx$$
-  </div>
 </div>
 
 {% endblock %}
+
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const input = document.getElementById("mathjax-input");
+      const preview = document.getElementById("mathjax-preview");
+      let timeoutId = null;
+
+      function updatePreview() {
+        preview.innerHTML = input.value;
+        if (window.MathJax && MathJax.typesetPromise) {
+          MathJax.typesetClear([preview]);
+          MathJax.typesetPromise([preview]).catch(err => console.error(err));
+        }
+      }
+
+      input.addEventListener("input", function () {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(updatePreview, 200);
+      });
+
+      updatePreview();
+    });
+  </script>
+{% endblock %}
+
